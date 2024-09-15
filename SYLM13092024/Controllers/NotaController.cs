@@ -5,31 +5,30 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace SYLM13092024.Controllers
+// Crear el controlador de Nota con los siguiente endpoints:
+// ObtenerNotas(Publicó), RegistrarNotas(Privado solo con acceso)
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class NotaController : ControllerBase
-    {// Crear una lista para almacenar las notas
-        static List<string> notas = new List<string>();
-        [HttpGet]
+    {
+      static List<object> Notes = new List<object>(); 
         
-        [HttpGet("obtenerNotas")]
+
+        [HttpGet]
+        //Permite el acceso publico
+        [AllowAnonymous]
         public IActionResult ObtenerNotas()
         {
-            return Ok(notas);
+            return Ok(Notes);
         }
 
-        [HttpPost("registrarNotas")]
-        public IActionResult RegistrarNotas([FromBody] string nota)
+        [HttpPost("registrarnotas")]
+        [Authorize]
+        public IActionResult RegistrarNotas([FromBody] string note)
         {
-            if (string.IsNullOrWhiteSpace(nota))
-            {
-                return BadRequest("La nota no puede estar vacía.");
-            }
-
-            notas.Add(nota);
-            return Ok("Nota registrada exitosamente.");
+            Notes.Add(note);
+            return Ok("Nota registrada.");
         }
     }
 }
